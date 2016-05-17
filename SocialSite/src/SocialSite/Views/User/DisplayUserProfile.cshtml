@@ -1,0 +1,31 @@
+﻿@model Domain.Entities.User.ApplicationUser
+
+<link rel="stylesheet" href="~/css/user.css" />
+
+<!--  Miejsce na zdjęcie w tle -->
+<div class="row">
+    <div class="col-md-12" id="pictureInBackground">
+        <img src="~/images/niebo_1.jpg" alt="Chania">
+    </div>
+</div>
+
+<div id="userProfileNav">
+    <ul class="nav nav-tabs">
+        <li role="presentation"><a href="/User/DisplayUserProfile">Informacje</a></li>
+        <li role="presentation"><a href="#">Znajomi</a></li>
+        <li role="presentation"><a href="#">Zdjęcia</a></li>
+    </ul>
+</div>
+
+<div id="container" class="row">
+    <div id="picture" class="col-md-4">
+        <img class="img-rounded" src="~/images/czlowiek_1.jpg" style="width:100%"/>
+    </div>
+    <div id="information" class="col-md-8">
+        <h3>@Model.FirstName</h3>
+        <h3>@Model.LastName</h3>
+        <h3>@Model.DateOfBirth.ToShortDateString()</h3>
+    </div>
+
+    
+</div>

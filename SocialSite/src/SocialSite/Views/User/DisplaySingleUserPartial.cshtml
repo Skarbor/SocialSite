@@ -1,0 +1,30 @@
+﻿@using System.Security.Claims;
+@using Domain.Entities.User;
+@model Domain.Entities.User.ApplicationUser
+
+<div id="singleUserinformatio">
+    @Model.UserName <br />
+    @Model.FirstName <br />
+    @Model.LastName <br />
+
+    @{
+        RelationshipBetweenUsers relationshipBetweenUsers = Model.GetRelationshipWithUser(User.GetUserId());
+
+        if (relationshipBetweenUsers == Domain.Entities.User.RelationshipBetweenUsers.NoRelationship)
+        {
+            <button type="button" onclick="SendInvitationToFriends('@Model.Id')">Zaproś do znajomych</button>
+        }
+        else if (relationshipBetweenUsers == Domain.Entities.User.RelationshipBetweenUsers.SendedInvitationToFriends)
+        {
+            <p>Wysłano zaproszenie</p>
+        }
+        else if (relationshipBetweenUsers == Domain.Entities.User.RelationshipBetweenUsers.ReceivedInvitationToFriends)
+        {
+            <p>Zaakceptuj zaproszenie</p>
+        }
+        else if (relationshipBetweenUsers == Domain.Entities.User.RelationshipBetweenUsers.Friends)
+        {
+            <p>Już jesteście znajomymi</p>
+        }
+    }
+</div>

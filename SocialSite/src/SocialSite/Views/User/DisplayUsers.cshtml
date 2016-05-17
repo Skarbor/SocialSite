@@ -1,0 +1,12 @@
+﻿@using System.Web;
+
+<link rel="stylesheet" href="~/css/user.css" />
+
+@model List<Domain.Entities.User.ApplicationUser>
+
+
+@foreach (Domain.Entities.User.ApplicationUser user in Model)
+{
+    { await Html.RenderPartialAsync("DisplaySingleUserPartial", user); }
+}
+

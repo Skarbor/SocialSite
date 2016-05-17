@@ -1,0 +1,28 @@
+﻿#pictureInBackground {
+    padding:0px;
+    margin:0px;
+}
+    #pictureInBackground img {
+        width:100%;
+        max-height:300px;
+    }
+
+#container {
+
+}
+#picture {
+    margin:0px;
+    padding:0px;
+}
+#information {
+    background-color:gray;
+    margin:0px;
+    padding:0px;
+}
+
+#singleUserinformatio {
+    padding:5px;
+    margin:5px;
+    background-color:lightyellow;
+    border:1px solid black;
+}
