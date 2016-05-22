@@ -1,5 +1,5 @@
 ﻿@using System.Security.Claims;
-@model Domain.Entities.User.ApplicationUser
+@model List<Domain.Entities.User.UserPicture>
 
 <link rel="stylesheet" href="~/css/user.css" />
 
@@ -14,17 +14,22 @@
     <ul class="nav nav-tabs">
         <li role="presentation"><a href="/User/DisplayUserProfile">Informacje</a></li>
         <li role="presentation"><a href="#">Znajomi</a></li>
-        <li role="presentation"><a href="/User/DisplayUserPictures?userId=@User.GetUserId()">Zdjęcia</a></li>
+        <li role="presentation"><a href="#">Zdjęcia</a></li>
     </ul>
 </div>
 
 <div id="container" class="row">
     <div id="picture" class="col-md-4">
-        <img class="img-rounded" src="~/images/czlowiek_1.jpg" style="width:100%"/>
+        <img class="img-rounded" src="~/images/czlowiek_1.jpg" style="width:100%" />
     </div>
-    <div id="information" class="col-md-8">
-        <h3>@Model.FirstName</h3>
-        <h3>@Model.LastName</h3>
-        <h3>@Model.DateOfBirth.ToShortDateString()</h3>
+    <div id="userPictures" class="col-md-8">
+        @*<button type="button" class="btn btn-success" onclick="location.href='/User/AddPicture(@User.GetUserId())'">
+            Dodaj zdjęcie!
+        </button>*@
+
+        <div class="fileUpload btn btn-primary">
+            <span>Dodaj zdjęcie</span>
+            <input type="file" class="upload" id="fileinput" />
+        </div>
     </div>
 </div>

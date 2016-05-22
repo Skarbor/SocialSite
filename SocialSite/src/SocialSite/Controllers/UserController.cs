@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Claims;
 using Microsoft.AspNet.Authorization;
+using System.IO;
+using Microsoft.AspNet.Http;
 
 namespace SocialSite.Controllers
 {
@@ -48,5 +50,25 @@ namespace SocialSite.Controllers
 
             return View(pictures);
         }
+
+        [HttpPost]
+        public JsonResult AddPicture(IFormFile file)
+        {
+            if (file.Length > 0)
+            {
+                var fileName = GetFileName(file);
+                var savePath = Path.Combine("C:\\SERVER_FILES\\", fileName);
+
+                file.SaveAs(savePath);
+                return Json(new { Status = "Ok" });
+            }
+            return Json(new { Status = "Error" });
+        }
+        private static string GetFileName(IFormFile file) => file.ContentDisposition.Split(';')
+                                                                .Select(x => x.Trim())
+                                                                .Where(x => x.StartsWith("filename="))
+                                                                .Select(x => x.Substring(9).Trim('"'))
+                                                                .First();
+
     }
 }
