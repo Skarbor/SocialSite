@@ -40,17 +40,5 @@ namespace Domain.Entities.User
             }
             return false;
         }
-
-        public string GetMainPicturePath()
-        {
-            foreach (UserPicture picture in Pictures)
-            {
-                if (picture.IsProfilPicture)
-                {
-                    return picture.Path;
-                }
-            }
-            return "";
-        }
     }
 }

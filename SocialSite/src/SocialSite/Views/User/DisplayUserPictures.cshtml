@@ -1,7 +1,9 @@
 ﻿@using System.Security.Claims;
 @model List<Domain.Entities.User.UserPicture>
 
+
 <link rel="stylesheet" href="~/css/user.css" />
+<script src="~/js/User/userProfilePictures.js"></script>
 
 <!--  Miejsce na zdjęcie w tle -->
 <div class="row">
@@ -19,17 +21,31 @@
 </div>
 
 <div id="container" class="row">
+    
     <div id="picture" class="col-md-4">
         <img class="img-rounded" src="~/images/czlowiek_1.jpg" style="width:100%" />
     </div>
+    
+    <script>
+        displayPictureInGalery(@ViewBag.Image);
+    </script>
+    
+
     <div id="userPictures" class="col-md-8">
-        @*<button type="button" class="btn btn-success" onclick="location.href='/User/AddPicture(@User.GetUserId())'">
-            Dodaj zdjęcie!
-        </button>*@
 
         <div class="fileUpload btn btn-primary">
             <span>Dodaj zdjęcie</span>
-            <input type="file" class="upload" id="fileinput" />
+            <input type="file" class="upload" id="fileinput" accept="image/*" />
+        </div>
+
+        <div id="galleryId">
+            @{
+                foreach (var picture in Model)
+                {
+                    <img src="@picture.PhotoString" />
+                }
+            }
         </div>
     </div>
 </div>
+

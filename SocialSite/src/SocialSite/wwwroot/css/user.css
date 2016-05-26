@@ -43,3 +43,22 @@
     opacity: 0;
     filter: alpha(opacity=0);
 }
+
+#galleryId {
+    display:inline-block;
+    position:relative;
+}
+
+#galleryId img {
+    width:200px;
+    height:200px;
+    margin:20px;
+}
+
+#galleryId img:hover {
+    width:200px;
+    height:200px;
+    margin:20px;
+
+    opacity:0.7;
+}

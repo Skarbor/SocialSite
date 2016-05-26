@@ -17,6 +17,7 @@ namespace SocialSite.Controllers
     public class UserController:Controller
     {
         IUserRepository userRepository = new UserRepository();
+        IPicturesRepository pictureRepository = new PicturesRepository();
 
         public ViewResult DisplayUserProfile()
         {
@@ -46,7 +47,7 @@ namespace SocialSite.Controllers
 
         public ActionResult DisplayUserPictures(string userId)
         {
-            List<UserPicture> pictures = new List<UserPicture>();
+            List<UserPicture> pictures = pictureRepository.GetPicturesForUser(userId);
 
             return View(pictures);
         }
@@ -54,15 +55,29 @@ namespace SocialSite.Controllers
         [HttpPost]
         public JsonResult AddPicture(IFormFile file)
         {
-            if (file.Length > 0)
-            {
-                var fileName = GetFileName(file);
-                var savePath = Path.Combine("C:\\SERVER_FILES\\", fileName);
+            //if (file.Length > 0)
+            //{
+            //    var fileName = GetFileName(file);
+            //    var savePath = Path.Combine("C:\\SERVER_FILES\\", fileName);
 
-                file.SaveAs(savePath);
-                return Json(new { Status = "Ok" });
+            //    file.SaveAs(savePath);
+            //    return Json(new { Status = "Ok" });
+            //}
+            //return Json(new { Status = "Error" });
+
+
+            UserPicture userPicture = new UserPicture();
+            userPicture.Date = DateTime.Now;
+            userPicture.UserId = User.GetUserId();
+
+            using (var binaryReader = new BinaryReader(file.OpenReadStream()))
+            {
+                userPicture.Picture = binaryReader.ReadBytes((int)file.Length);
             }
-            return Json(new { Status = "Error" });
+
+            pictureRepository.SavePicture(userPicture);
+
+            return Json(new { Status = "Ok" });
         }
         private static string GetFileName(IFormFile file) => file.ContentDisposition.Split(';')
                                                                 .Select(x => x.Trim())

@@ -9,5 +9,7 @@ namespace Domain.Abstract
     public interface IPicturesRepository
     {
         List<UserPicture> GetPicturesForUser(string userId);
+
+        void SavePicture(UserPicture userPicture);
     }
 }

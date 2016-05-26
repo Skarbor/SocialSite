@@ -22,6 +22,10 @@ namespace Domain.Concrete
             return picturesContext.UserPictures.Where(x => x.UserId == userId).ToList();
         }
 
-
+        public void SavePicture(UserPicture userPicture)
+        {
+            picturesContext.Add(userPicture);
+            picturesContext.SaveChanges();
+        }
     }
 }
