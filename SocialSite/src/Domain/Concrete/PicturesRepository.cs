@@ -4,28 +4,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities.User;
-using Domain.Context;
+using Microsoft.Data.Entity;
+using Domain.Entities.Picture;
 
 namespace Domain.Concrete
 {
     public class PicturesRepository : IPicturesRepository
     {
-        PicturesContext picturesContext;
+        ApplicationDbContext dbContext;
 
         public PicturesRepository()
         {
-            picturesContext = new PicturesContext();
+            dbContext = new ApplicationDbContext();
         }
 
         public List<UserPicture> GetPicturesForUser(string userId)
         {
-            return picturesContext.UserPictures.Where(x => x.UserId == userId).ToList();
+            return dbContext.UserPictures.Where(x => x.UserId == userId).Include(x=>x.Picture).ToList();
+        }
+
+        public UserPicture GetPictureById(int pictureId)
+        {
+            return dbContext.UserPictures.Where(x => x.Id == pictureId).Include(x => x.Picture).FirstOrDefault();
         }
 
         public void SavePicture(UserPicture userPicture)
         {
-            picturesContext.Add(userPicture);
-            picturesContext.SaveChanges();
+            dbContext.Add(userPicture.Picture);
+            dbContext.Add(userPicture);
+            dbContext.SaveChanges();
         }
     }
 }

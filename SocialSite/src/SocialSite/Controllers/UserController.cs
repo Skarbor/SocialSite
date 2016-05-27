@@ -55,30 +55,28 @@ namespace SocialSite.Controllers
         [HttpPost]
         public JsonResult AddPicture(IFormFile file)
         {
-            //if (file.Length > 0)
-            //{
-            //    var fileName = GetFileName(file);
-            //    var savePath = Path.Combine("C:\\SERVER_FILES\\", fileName);
-
-            //    file.SaveAs(savePath);
-            //    return Json(new { Status = "Ok" });
-            //}
-            //return Json(new { Status = "Error" });
-
-
             UserPicture userPicture = new UserPicture();
-            userPicture.Date = DateTime.Now;
             userPicture.UserId = User.GetUserId();
+            userPicture.Picture.Date = DateTime.Now;
 
             using (var binaryReader = new BinaryReader(file.OpenReadStream()))
             {
-                userPicture.Picture = binaryReader.ReadBytes((int)file.Length);
+                userPicture.Picture.PictureBytes = binaryReader.ReadBytes((int)file.Length);
             }
 
             pictureRepository.SavePicture(userPicture);
 
             return Json(new { Status = "Ok" });
         }
+
+        public ActionResult DisplaySinglePicture(int pictureId)
+        {
+            UserPicture picture = pictureRepository.GetPictureById(pictureId);
+
+            return View(picture);
+        }
+
+
         private static string GetFileName(IFormFile file) => file.ContentDisposition.Split(';')
                                                                 .Select(x => x.Trim())
                                                                 .Where(x => x.StartsWith("filename="))

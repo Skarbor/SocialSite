@@ -1,23 +1,20 @@
 ﻿using Domain.Abstract;
-using Domain.Context;
 using Domain.Entities.Friendship;
 using Domain.Entities.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.Data.Entity;
 namespace Domain.Concrete
 {
     public class UserRepository : IUserRepository
     {
         ApplicationDbContext applicationDbContext;
-        FriendsInvitationContext friendsInvitationContext;
 
         public UserRepository()
         {
             applicationDbContext = new ApplicationDbContext();
-            friendsInvitationContext = new FriendsInvitationContext();
         }
 
 
@@ -55,15 +52,15 @@ namespace Domain.Concrete
                     WhoHadBeenInvId = receivingUser.Id,
                     Date = DateTime.Now
                 };
-                friendsInvitationContext.FriendsInvitations.Add(friendsinvitation);
+                applicationDbContext.FriendsInvitations.Add(friendsinvitation);
 
-                friendsInvitationContext.SaveChanges();
+                applicationDbContext.SaveChanges();
             }
         }
 
         public IEnumerable<FriendsInvitation> GetInvitationForUser(string userId)
         {
-            return friendsInvitationContext.FriendsInvitations.Where(p => p.WhoHadBeenInvId == userId).AsEnumerable();
+            return applicationDbContext.FriendsInvitations.Where(p => p.WhoHadBeenInvId == userId).AsEnumerable();
         }
 
         public RelationshipBetweenUsers GetRelationshipBetweenUsers(string firstUserId, string secondUserId)
@@ -77,10 +74,10 @@ namespace Domain.Concrete
             }
             else
             {
-                FriendsInvitation invitationOne = (from p in friendsInvitationContext.FriendsInvitations where p.WhoInvId == firstUserId && p.WhoHadBeenInvId == secondUserId select p).FirstOrDefault();
+                FriendsInvitation invitationOne = (from p in applicationDbContext.FriendsInvitations where p.WhoInvId == firstUserId && p.WhoHadBeenInvId == secondUserId select p).FirstOrDefault();
                 if (invitationOne != null) return RelationshipBetweenUsers.SendedInvitationToFriends;
 
-                FriendsInvitation invitationTwo = (from p in friendsInvitationContext.FriendsInvitations where p.WhoInvId == secondUserId && p.WhoHadBeenInvId == firstUserId select p).FirstOrDefault();
+                FriendsInvitation invitationTwo = (from p in applicationDbContext.FriendsInvitations where p.WhoInvId == secondUserId && p.WhoHadBeenInvId == firstUserId select p).FirstOrDefault();
                 if (invitationOne != null) return RelationshipBetweenUsers.ReceivedInvitationToFriends;
 
                 return RelationshipBetweenUsers.NoRelationship;

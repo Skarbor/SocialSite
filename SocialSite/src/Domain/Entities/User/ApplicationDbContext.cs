@@ -4,11 +4,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
+using Domain.Entities.Friendship;
 
 namespace Domain.Entities.User
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        public DbSet<FriendsInvitation> FriendsInvitations { get; set; }
+        public DbSet<Picture.Picture> Pictures { get; set; }
+        public DbSet<UserPicture> UserPictures { get; set; }
+        public DbSet<Friendship.Friendship> Friendships { get; set; }
+        public DbSet<Post.Post> Posts { get; set; }
+        public DbSet<Post.Comment> Comments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

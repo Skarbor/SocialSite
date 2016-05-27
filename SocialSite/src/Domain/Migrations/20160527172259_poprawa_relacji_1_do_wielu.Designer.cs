@@ -8,27 +8,14 @@ using Domain.Entities.User;
 namespace Domain.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20160527172259_poprawa_relacji_1_do_wielu")]
+    partial class poprawa_relacji_1_do_wielu
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.0-rc1-16348")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Domain.Entities.Friendship.Friendship", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("FirstUser");
-
-                    b.Property<DateTime>("FriendshipDate");
-
-                    b.Property<string>("SecondUser");
-
-                    b.HasKey("Id");
-                });
 
             modelBuilder.Entity("Domain.Entities.Friendship.FriendsInvitation", b =>
                 {
@@ -69,8 +56,6 @@ namespace Domain.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int?>("PostId");
-
                     b.Property<string>("Text");
 
                     b.Property<string>("UserId");
@@ -80,25 +65,13 @@ namespace Domain.Migrations
                     b.HasKey("Id");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Post.Post", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<string>("Text");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-                });
-
             modelBuilder.Entity("Domain.Entities.User.ApplicationUser", b =>
                 {
                     b.Property<string>("Id");
 
                     b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ApplicationUserId");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
@@ -161,7 +134,7 @@ namespace Domain.Migrations
 
                     b.Property<string>("PictureDescription");
 
-                    b.Property<int?>("PictureId");
+                    b.Property<int>("PictureId");
 
                     b.Property<string>("PictureName");
 
@@ -258,10 +231,6 @@ namespace Domain.Migrations
                         .WithMany()
                         .HasForeignKey("CommentId");
 
-                    b.HasOne("Domain.Entities.Post.Post")
-                        .WithMany()
-                        .HasForeignKey("PostId");
-
                     b.HasOne("Domain.Entities.User.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId");
@@ -271,11 +240,11 @@ namespace Domain.Migrations
                         .HasForeignKey("UserPictureId");
                 });
 
-            modelBuilder.Entity("Domain.Entities.Post.Post", b =>
+            modelBuilder.Entity("Domain.Entities.User.ApplicationUser", b =>
                 {
                     b.HasOne("Domain.Entities.User.ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("Domain.Entities.User.UserPicture", b =>
@@ -285,8 +254,8 @@ namespace Domain.Migrations
                         .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("Domain.Entities.Picture.Picture")
-                        .WithMany()
-                        .HasForeignKey("PictureId");
+                        .WithOne()
+                        .HasForeignKey("Domain.Entities.User.UserPicture", "PictureId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>

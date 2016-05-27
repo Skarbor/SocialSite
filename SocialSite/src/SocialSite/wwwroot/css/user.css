@@ -44,6 +44,10 @@
     filter: alpha(opacity=0);
 }
 
+#userProfileNav a {
+    font-size:larger;
+}
+
 #galleryId {
     display:inline-block;
     position:relative;
