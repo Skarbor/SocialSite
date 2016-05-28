@@ -1,4 +1,5 @@
-﻿using Domain.Entities.User;
+﻿using Domain.Entities.Post;
+using Domain.Entities.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,9 @@ namespace Domain.Abstract
     public interface IPicturesRepository
     {
         List<UserPicture> GetPicturesForUser(string userId);
-        UserPicture GetPictureById(int pictureId);
+        UserPicture GetUserPictureById(int pictureId);
 
         void SavePicture(UserPicture userPicture);
+        Comment AddCommentToPicture(int pictureId, string commentText, string userId);
     }
 }

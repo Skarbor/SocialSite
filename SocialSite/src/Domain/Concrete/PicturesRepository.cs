@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Domain.Entities.User;
 using Microsoft.Data.Entity;
 using Domain.Entities.Picture;
+using Domain.Entities.Post;
 
 namespace Domain.Concrete
 {
@@ -23,9 +24,16 @@ namespace Domain.Concrete
             return dbContext.UserPictures.Where(x => x.UserId == userId).Include(x=>x.Picture).ToList();
         }
 
-        public UserPicture GetPictureById(int pictureId)
+        public UserPicture GetUserPictureById(int pictureId)
         {
-            return dbContext.UserPictures.Where(x => x.Id == pictureId).Include(x => x.Picture).FirstOrDefault();
+            var picture = dbContext.UserPictures.Where(x => x.Id == pictureId).Include(x => x.Picture).Include(x=>x.Comments).FirstOrDefault();
+
+            foreach (var comment in picture.Comments)
+            {
+                dbContext.Comments.Where(x => x.Id == comment.Id).Include(x => x.User).FirstOrDefault();
+            }
+
+            return picture;
         }
 
         public void SavePicture(UserPicture userPicture)
@@ -33,6 +41,21 @@ namespace Domain.Concrete
             dbContext.Add(userPicture.Picture);
             dbContext.Add(userPicture);
             dbContext.SaveChanges();
+        }
+
+        public Comment AddCommentToPicture(int pictureId, string commentText, string userId)
+        {
+            UserPicture userPicture = dbContext.UserPictures.Where(x => x.Id == pictureId).FirstOrDefault();
+
+            Comment comment = new Comment();
+            comment.Date = DateTime.Now;
+            comment.Text = commentText;
+            comment.User = dbContext.Users.Where(x => x.Id == userId).FirstOrDefault();
+            userPicture.Comments.Add(comment);
+
+            dbContext.SaveChanges();
+
+            return comment;
         }
     }
 }

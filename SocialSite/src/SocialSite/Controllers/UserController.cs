@@ -10,6 +10,7 @@ using System.Security.Claims;
 using Microsoft.AspNet.Authorization;
 using System.IO;
 using Microsoft.AspNet.Http;
+using Domain.Entities.Post;
 
 namespace SocialSite.Controllers
 {
@@ -19,10 +20,13 @@ namespace SocialSite.Controllers
         IUserRepository userRepository = new UserRepository();
         IPicturesRepository pictureRepository = new PicturesRepository();
 
-        public ViewResult DisplayUserProfile()
+        public ViewResult DisplayUserProfile(string userId = "")
         {
-            ApplicationUser user = userRepository.GetUser(User.GetUserId());
-            return View(user);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View(userRepository.GetUser(User.GetUserId()));
+            }
+            else return View(userRepository.GetUser(userId));
         }
 
         public ActionResult DisplayUsers(string userNamePattern)
@@ -71,11 +75,17 @@ namespace SocialSite.Controllers
 
         public ActionResult DisplaySinglePicture(int pictureId)
         {
-            UserPicture picture = pictureRepository.GetPictureById(pictureId);
+            UserPicture picture = pictureRepository.GetUserPictureById(pictureId);
 
             return View(picture);
         }
 
+        public JsonResult AddCommentToPicture(int pictureId, string commentText)
+        {
+            Comment comment = pictureRepository.AddCommentToPicture(pictureId, commentText, User.GetUserId());
+
+            return Json(comment);
+        }
 
         private static string GetFileName(IFormFile file) => file.ContentDisposition.Split(';')
                                                                 .Select(x => x.Trim())

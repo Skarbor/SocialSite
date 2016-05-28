@@ -33,11 +33,18 @@
             <input type="file" class="upload" id="fileinput" accept="image/*" />
         </div>
 
+
         <div id="galleryId">
             @{
                 foreach (var picture in Model)
                 {
-                    <img src="@picture.Picture.PhotoString" />
+                    @* TODO *@
+                    @* Link nie działa jeśli strona nie była przeładowana, przy zapisie zwrócić ID i 
+                        dopiero prawidłowo wyświetlić z linkiem do strony *@
+
+                    <a href="/User/DisplaySinglePicture?pictureId=@picture.Id">
+                        <img src="@picture.Picture.PhotoString" />
+                    </a>
                 }
             }
         </div>

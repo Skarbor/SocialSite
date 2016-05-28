@@ -1,0 +1,24 @@
+﻿@model Domain.Entities.User.UserPicture
+<script src="~/js/User/userDisplaySinglePicture.js"></script>
+<link rel="stylesheet" href="~/css/User/userDisplaySinglePicture.css" />
+
+
+<div id="singleUserPictureDiv">
+    <img src="@Model.Picture.PhotoString" />
+
+    <form method="get">
+        <input type="text" placeholder="Wpisz swój komentarz" onkeypress="if (event.keyCode == 13) { sendComment(@Model.Id); }" />
+    </form>
+
+
+    @foreach (var item in Model.Comments)
+    {
+
+        <div class="comment">
+            <em>@Html.ActionLink(@item.User.FirstName + " " + @item.User.LastName, "DisplayUserProfile", "User", new { userId = Model.UserId }, null)</em> napisał:
+            <article>&#8222 @item.Text &#8221;</article>
+            <em>@item.Date.ToShortDateString() @item.Date.ToShortTimeString()</em>
+        </div>
+    }
+
+</div>
