@@ -14,5 +14,6 @@ namespace Domain.Abstract
 
         void SavePicture(UserPicture userPicture);
         Comment AddCommentToPicture(int pictureId, string commentText, string userId);
+        void SetProfilePictureById(int pictureId);
     }
 }

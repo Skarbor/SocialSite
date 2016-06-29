@@ -36,6 +36,15 @@ namespace SocialSite.Controllers
             return View(users);
         }
 
+        public ActionResult DisplayUserFriends(string userId = "")
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View(userRepository.GetUser(User.GetUserId()));
+            }
+            else return View(userRepository.GetUser(userId));
+        }
+
         [HttpPost]
         public ActionResult DisplayUserPartial(string userId)
         {
@@ -49,18 +58,20 @@ namespace SocialSite.Controllers
 
         }
 
-        public ActionResult DisplayUserPictures(string userId)
+        public ActionResult DisplayUserPictures(string userId = "")
         {
-            List<UserPicture> pictures = pictureRepository.GetPicturesForUser(userId);
-
-            return View(pictures);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return View(userRepository.GetUser(User.GetUserId()));
+            }
+            else return View(userRepository.GetUser(userId));
         }
 
         [HttpPost]
         public JsonResult AddPicture(IFormFile file)
         {
             UserPicture userPicture = new UserPicture();
-            userPicture.UserId = User.GetUserId();
+            userPicture.ApplicationUserId = User.GetUserId();
             userPicture.Picture.Date = DateTime.Now;
 
             using (var binaryReader = new BinaryReader(file.OpenReadStream()))
@@ -73,6 +84,25 @@ namespace SocialSite.Controllers
             return Json(new { Status = "Ok" });
         }
 
+        [HttpPost]
+        public JsonResult AddProfilePicture(IFormFile file)
+        {
+            UserPicture userPicture = new UserPicture();
+            userPicture.ApplicationUserId = User.GetUserId();
+            userPicture.Picture.Date = DateTime.Now;
+
+            using (var binaryReader = new BinaryReader(file.OpenReadStream()))
+            {
+                userPicture.Picture.PictureBytes = binaryReader.ReadBytes((int)file.Length);
+            }
+
+            pictureRepository.SavePicture(userPicture);
+
+            pictureRepository.SetProfilePictureById(userPicture.Id);
+
+            return Json(userPicture.Id);
+        }
+
         public ActionResult DisplaySinglePicture(int pictureId)
         {
             UserPicture picture = pictureRepository.GetUserPictureById(pictureId);
@@ -83,6 +113,8 @@ namespace SocialSite.Controllers
         public JsonResult AddCommentToPicture(int pictureId, string commentText)
         {
             Comment comment = pictureRepository.AddCommentToPicture(pictureId, commentText, User.GetUserId());
+            comment.UserPicture = null;
+            comment.User.Pictures = null;
 
             return Json(comment);
         }

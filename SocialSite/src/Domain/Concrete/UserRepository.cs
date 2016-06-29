@@ -20,7 +20,8 @@ namespace Domain.Concrete
 
         public ApplicationUser GetUser(string userId)
         {
-            return applicationDbContext.Users.Where(p => p.Id == userId).FirstOrDefault();
+            var user = applicationDbContext.Users.Where(p => p.Id == userId).Include(x => x.Pictures).ThenInclude(x=>x.Picture).FirstOrDefault();
+            return user;
         }
 
         public List<ApplicationUser> GetUsers(string userNamePattern)

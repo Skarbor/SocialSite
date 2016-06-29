@@ -7,6 +7,7 @@ using Domain.Abstract;
 using Domain.Concrete;
 using Domain.Entities.User;
 using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities.Friendship;
 
 namespace Domain.Entities.User
 {
@@ -22,6 +23,24 @@ namespace Domain.Entities.User
         public DateTime DateOfBirth { get; set; }
         public virtual ICollection<UserPicture> Pictures { get; set; }
 
+        [NotMapped]
+        public UserPicture ProfilPicture
+        {
+            get
+            {
+                if (Pictures == null) return null;
+
+                foreach (UserPicture picture in Pictures)
+                {
+                    if (picture.IsProfilPicture)
+                    {
+                        return picture;
+                    }
+                }
+                return null;
+            }
+        }
+
         public ApplicationUser()
         {
             Friends = new List<ApplicationUser>();
@@ -31,6 +50,11 @@ namespace Domain.Entities.User
         public RelationshipBetweenUsers GetRelationshipWithUser(string userId)
         {
             return userRepository.GetRelationshipBetweenUsers(userId, this.Id);
+        }
+
+        public IEnumerable<FriendsInvitation> GetFriendsInvitations()
+        {
+            return userRepository.GetInvitationForUser(this.Id);
         }
 
         public bool HasProfilePicture()

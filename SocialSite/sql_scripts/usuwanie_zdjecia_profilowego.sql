@@ -1,0 +1,1 @@
+﻿UPDATE dbo.UserPicture set IsProfilPicture = 'False' Where IsProfilPicture = 'True' 

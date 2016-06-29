@@ -13,7 +13,7 @@
 <div id="userProfileNav">
     <ul class="nav nav-tabs">
         <li role="presentation"><a href="/User/DisplayUserProfile">Informacje</a></li>
-        <li role="presentation"><a href="/User/DisplayUserFriends">Znajomi</a></li>
+        <li role="presentation"><a href="#">Znajomi</a></li>
         <li role="presentation"><a href="/User/DisplayUserPictures?userId=@User.GetUserId()">Zdjęcia</a></li>
     </ul>
 </div>
@@ -35,13 +35,31 @@
 
                 <input type="file" class="upload" id="profileFileinput" accept="image/*" />
             </div>
-        
+
         }
 
-</div>
-    <div id="information" class="col-md-8">
-        <h3>@Model.FirstName</h3>
-        <h3>@Model.LastName</h3>
-        <h3>@Model.DateOfBirth.ToShortDateString()</h3>
+    </div>
+    <div id="userFriends">
+
+        @if (Model.Friends.Count == 0)
+        {
+            <h3>Nie masz znajomych, zaproś kogoś!</h3>
+        }
+        else
+        {
+            <h3>Masz @Model.Friends.Count znajomych!</h3>
+        }
+
+        @foreach (var friendsInvitation in Model.GetFriendsInvitations())
+        {
+            @Html.ActionLink(friendsInvitation.GetUserWhoSendInvitation().FirstName, "DisplaySinglePicture", "User", null, 
+                new { userId = friendsInvitation.GetUserWhoSendInvitation().Id });
+            <span>zaprosił Cię do znajomych!</span> 
+        }
+
+        @foreach (var friend in Model.Friends)
+        {
+                @friend.FirstName
+        }
     </div>
 </div>

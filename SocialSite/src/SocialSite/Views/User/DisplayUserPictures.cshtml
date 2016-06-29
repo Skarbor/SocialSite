@@ -1,5 +1,5 @@
 ﻿@using System.Security.Claims;
-@model List<Domain.Entities.User.UserPicture>
+@model Domain.Entities.User.ApplicationUser
 
 
 <link rel="stylesheet" href="~/css/user.css" />
@@ -22,8 +22,25 @@
 
 <div id="container" class="row">
     
-    <div id="picture" class="col-md-4">
-        <img class="img-rounded" src="~/images/czlowiek_1.jpg" style="width:100%" />
+    <div id="profilePicture" class="col-md-4">
+        @if (Model.HasProfilePicture())
+        {
+            <a href="/User/DisplaySinglePicture?pictureId=@Model.ProfilPicture.Picture.Id">
+                <img class="img-rounded" src="@Model.ProfilPicture.Picture.PhotoString" />
+            </a>
+        }
+        else
+        {
+            <div class="image-upload">
+                <label for="profileFileinput">
+                    <img class="img-rounded" src="~/images/anonim_men.jpg" />
+                </label>
+
+                <input type="file" class="upload" id="profileFileinput" accept="image/*" />
+            </div>
+
+        }
+
     </div>
     
     <div id="userPictures" class="col-md-8">
@@ -36,7 +53,7 @@
 
         <div id="galleryId">
             @{
-                foreach (var picture in Model)
+                foreach (var picture in Model.Pictures)
                 {
                     @* TODO *@
                     @* Link nie działa jeśli strona nie była przeładowana, przy zapisie zwrócić ID i 

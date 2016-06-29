@@ -28,11 +28,15 @@ function sendComment(pictureId)
             url: "/User/AddCommentToPicture",
             method: "GET",
             data: { "pictureId": pictureId, "commentText": commentText },
-            dataType: "json"
-        })
-        .done(function (data)
-        {
-            displaySendedComment(data);
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                $("#singleUserPictureDiv input[type='text']").val("");
+                displaySendedComment(data);
+            },
+            error: function (data) {
+                alert(data);
+            }
         });
 }
 

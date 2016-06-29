@@ -20,10 +20,20 @@
     padding:0px;
 }
 
-#singleUserinformatio {
-    padding:5px;
+#singleUserinformation {
+    padding:10px;
     margin:5px;
     background-color:lightyellow;
+    border:1px solid black;
+    height:auto;
+}
+
+#singleUserinformation img {
+
+    width:100px;
+    height:100px;
+    float:left;
+    margin-right:5px;
     border:1px solid black;
 }
 
@@ -66,3 +76,25 @@
 
     opacity:0.7;
 }
+
+#profilePicture {
+    max-width:300px;
+    max-height:300px;
+
+}
+
+#profilePicture img {
+    width:100%;
+
+}
+
+.image-upload > input
+{
+    display: none;
+}
+
+.image-upload :hover {
+    border: 2px solid black;
+    cursor: pointer;
+}
+

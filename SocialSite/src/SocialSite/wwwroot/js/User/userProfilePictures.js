@@ -2,13 +2,29 @@
 {
     var uploadfiles = document.querySelector('#fileinput');
 
-    uploadfiles.addEventListener('change', function () {
-        var files = this.files;
+    if (uploadfiles != null) {
+        uploadfiles.addEventListener('change', function () {
+            var files = this.files;
 
-        for (var i = 0; i < files.length; i++) {
-            uploadFile(this.files[i]);
-        }
-    }, false);
+            for (var i = 0; i < files.length; i++) {
+                uploadFile(this.files[i]);
+            }
+        }, false);
+    }
+
+
+    var uploadProfilePictures = document.querySelector('#profileFileinput');
+
+    if (uploadProfilePictures != null) {
+        uploadProfilePictures.addEventListener('change', function () {
+            var files = this.files;
+
+            for (var i = 0; i < files.length; i++) {
+                uploadProfilePicture(this.files[i]);
+            }
+        }, false);
+    }
+
 });
 
 
@@ -57,6 +73,27 @@ function uploadFile(file) {
     xhr.send(fd);
 }
 
+function uploadProfilePicture(file) {
+    var url = '/User/AddProfilePicture';
+    var xhr = new XMLHttpRequest();
+    var fd = new FormData();
+    xhr.open("Post", url, true);
+
+    var pictureId;
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // Every thing ok, file uploaded
+            pictureId = xhr.response;
+
+            displayProfilePicture(file, pictureId);
+        }
+    };
+
+    fd.append("file", file);
+    xhr.send(fd);
+}
+
 function displayPictureInGalery(file) {
     var gallery = document.getElementById('galleryId');
     var img = document.createElement("img");
@@ -71,6 +108,28 @@ function displayPictureInGalery(file) {
     reader.readAsDataURL(file);
 }
 
+function displayProfilePicture(file, pictureId)
+{
+    var profilePictureDiv = document.getElementById("profilePicture");
+
+    deleteChildren(profilePictureDiv);
+
+    var img = document.createElement("img");
+    img.className = "img-rounded";
+    img.file = file;
+
+
+    var a = document.createElement("a");
+    a.href = "/User/DisplaySinglePicture?pictureId=" + pictureId;
+
+    a.appendChild(img);
+
+    profilePictureDiv.appendChild(a);
+    var reader = new FileReader();
+    reader.onload = (function (aImg) { return function (e) { aImg.src = e.target.result; }; })(img);
+    reader.readAsDataURL(file);
+}
+
 function addButtonToPictureInGalery(gallery, image)
 {
     var button = document.createElement("button");
@@ -80,4 +139,14 @@ function addButtonToPictureInGalery(gallery, image)
     button.offsetTop = getPosition(image).y;
     button.offsetLeft = getPosition(image).x;
     gallery.appendChild(button);
+}
+
+
+function deleteChildren(node)
+{
+    if (node.hasChildNodes) {
+        for (var i = node.childNodes.length - 1; i >= 0; i--) {
+            node.removeChild(node.childNodes[i]);
+        }
+    }
 }
