@@ -1,8 +1,8 @@
 ﻿@using System.Security.Claims;
 @using Domain.Entities.User;
-@model Domain.Entities.User.ApplicationUser
+@model ApplicationUser
 
-<div id="singleUserinformation">
+<div class="singleUserinformation">
     @if (Model.HasProfilePicture())
     {
         <img class="img-rounded" src="@Model.ProfilPicture.Picture.PhotoString" />
@@ -13,28 +13,28 @@
     }
     <br />
 
-    @Model.UserName <br />
-    @Model.FirstName <br />
-    @Model.LastName <br />
+    <span>@Model.UserName</span> <br />
+    <span>@Model.FirstName</span> <br />
+    <span>@Model.LastName</span> <br />
 
-    @{
-        RelationshipBetweenUsers relationshipBetweenUsers = Model.GetRelationshipWithUser(User.GetUserId());
+        @{
+            RelationshipBetweenUsers relationshipBetweenUsers = Model.GetRelationshipWithUser(User.GetUserId());
 
-        if (relationshipBetweenUsers == RelationshipBetweenUsers.NoRelationship)
-        {
-            <button type="button" onclick="SendInvitationToFriends('@Model.Id')">Zaproś do znajomych</button>
+            if (relationshipBetweenUsers == RelationshipBetweenUsers.NoRelationship)
+            {
+                <button type="button" onclick="SendInvitationToFriends('@Model.Id', '@Model.UserName')">Zaproś do znajomych</button>
+            }
+            else if (relationshipBetweenUsers == RelationshipBetweenUsers.SendedInvitationToFriends)
+            {
+                <p>Wysłano zaproszenie</p>
+            }
+            else if (relationshipBetweenUsers == RelationshipBetweenUsers.ReceivedInvitationToFriends)
+            {
+                <p>Zaakceptuj zaproszenie</p>
+            }
+            else if (relationshipBetweenUsers == RelationshipBetweenUsers.Friends)
+            {
+                <p>Już jesteście znajomymi</p>
+            }
         }
-        else if (relationshipBetweenUsers == RelationshipBetweenUsers.SendedInvitationToFriends)
-        {
-            <p>Wysłano zaproszenie</p>
-        }
-        else if (relationshipBetweenUsers == RelationshipBetweenUsers.ReceivedInvitationToFriends)
-        {
-            <p>Zaakceptuj zaproszenie</p>
-        }
-        else if (relationshipBetweenUsers == RelationshipBetweenUsers.Friends)
-        {
-            <p>Już jesteście znajomymi</p>
-        }
-    }
 </div>

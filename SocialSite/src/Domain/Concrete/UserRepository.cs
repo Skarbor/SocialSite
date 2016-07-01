@@ -28,7 +28,7 @@ namespace Domain.Concrete
         {
             List<ApplicationUser> users = new List<ApplicationUser>();
 
-            foreach (ApplicationUser user in applicationDbContext.Users)
+            foreach (ApplicationUser user in applicationDbContext.Users.Include(x=>x.Pictures).ThenInclude(x=>x.Picture))
             {
                 if (!String.IsNullOrEmpty(userNamePattern))
                 {
