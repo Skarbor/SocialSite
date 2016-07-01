@@ -20,20 +20,25 @@
     padding:0px;
 }
 
+#usersInformations {
+    float:none;
+}
+
 #singleUserinformation {
     padding:10px;
-    margin:5px;
+    margin:10px;
     background-color:lightyellow;
     border:1px solid black;
     height:auto;
+    text-align:center;
+    width:250px;
+    float:left;
 }
 
 #singleUserinformation img {
 
     width:100px;
     height:100px;
-    float:left;
-    margin-right:5px;
     border:1px solid black;
 }
 

@@ -64,11 +64,15 @@
             </div>
         </div>
         <div class="container body-content">
-            @RenderBody()
-            <hr />
-            <footer>
-                <p>&copy; 2016 - SocialSite</p>
-            </footer>
+            <div class="row">
+                @RenderBody()
+            </div>
+            <div class="row">
+                <hr />
+                <footer>
+                    <p>&copy; 2016 - SocialSite</p>
+                </footer>
+            </div>
         </div>
 
         @RenderSection("scripts", required: false)

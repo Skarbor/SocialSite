@@ -4,9 +4,10 @@
 
 @model List<Domain.Entities.User.ApplicationUser>
 
-
-@foreach (Domain.Entities.User.ApplicationUser user in Model)
-{
-    { await Html.RenderPartialAsync("DisplaySingleUserPartial", user); }
-}
+<div id="usersInformations">
+    @foreach (Domain.Entities.User.ApplicationUser user in Model)
+    {
+        { await Html.RenderPartialAsync("DisplaySingleUserPartial", user); }
+    }
+</div>
 

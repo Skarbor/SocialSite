@@ -19,9 +19,10 @@ namespace SocialSite.Controllers
             userRepository.SendInvitationToFriends(User.GetUserId(), userId);
         }
 
-        //public void AcceptInvitationToFriends(int invitationId)
-        //{
-        //    userRepository.
-        //}
+
+        public void AcceptInvitationToFriends(int invitationId)
+        {
+            userRepository.AcceptInvitationToFriends(invitationId);
+        }
     }
 }

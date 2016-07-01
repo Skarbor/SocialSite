@@ -59,6 +59,24 @@ namespace Domain.Concrete
             }
         }
 
+        public void AcceptInvitationToFriends(int invitationId)
+        {
+            FriendsInvitation invitation = applicationDbContext.FriendsInvitations.Where(p => p.Id == invitationId).Single();
+
+            if (invitation == null) throw new ArgumentException("Nie znaleziono zaproszenia");
+
+            invitation.Accepted = true;
+            invitation.AcceptedDate = DateTime.Now;
+
+            ApplicationUser userWhoSendInvitation = invitation.GetUserWhoSendInvitation();
+            ApplicationUser userWhoHadBeenInvitated = invitation.GetUserWhoHadBenInvitated();
+
+            userWhoSendInvitation.Friends.Add(userWhoHadBeenInvitated);
+            userWhoHadBeenInvitated.Friends.Add(userWhoSendInvitation);
+
+            applicationDbContext.SaveChanges();
+        }
+
         public IEnumerable<FriendsInvitation> GetInvitationForUser(string userId)
         {
             return applicationDbContext.FriendsInvitations.Where(p => p.WhoHadBeenInvId == userId).AsEnumerable();

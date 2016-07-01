@@ -6,10 +6,14 @@
         data: { userId: userId },
         context: document.body,
         success: function () {
-            $('#singleUserinformatio').load("/User/DisplayUserPartial", { userId: userId });
+            $('#singleUserinformation').load("/User/DisplayUserPartial", { userId: userId });
         }
     });
 }
 
+function AcceptInvitationToFriends(invitationId)
+{
+
+}
 
 
