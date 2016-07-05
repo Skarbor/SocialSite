@@ -59,9 +59,9 @@ namespace Domain.Concrete
             }
         }
 
-        public void AcceptInvitationToFriends(int invitationId)
+        public void AcceptInvitationToFriends(string userWhoAcceptInvitationId, string userWhoSendInvitationId)
         {
-            FriendsInvitation invitation = applicationDbContext.FriendsInvitations.Where(p => p.Id == invitationId).Single();
+            FriendsInvitation invitation = applicationDbContext.FriendsInvitations.Where(p => p.WhoInvId == userWhoSendInvitationId && p.WhoHadBeenInvId == userWhoAcceptInvitationId).Single();
 
             if (invitation == null) throw new ArgumentException("Nie znaleziono zaproszenia");
 
@@ -71,8 +71,12 @@ namespace Domain.Concrete
             ApplicationUser userWhoSendInvitation = invitation.GetUserWhoSendInvitation();
             ApplicationUser userWhoHadBeenInvitated = invitation.GetUserWhoHadBenInvitated();
 
-            userWhoSendInvitation.Friends.Add(userWhoHadBeenInvitated);
-            userWhoHadBeenInvitated.Friends.Add(userWhoSendInvitation);
+            Friendship friendship = new Friendship();
+            friendship.FirstUser = userWhoSendInvitation.Id;
+            friendship.SecondUser = userWhoHadBeenInvitated.Id;
+            friendship.FriendshipDate = DateTime.Now;
+
+            applicationDbContext.Friendships.Add(friendship);
 
             applicationDbContext.SaveChanges();
         }
@@ -87,7 +91,7 @@ namespace Domain.Concrete
             ApplicationUser firstUser = applicationDbContext.Users.Where(p => p.Id == firstUserId).FirstOrDefault();
             ApplicationUser secondUser = applicationDbContext.Users.Where(p => p.Id == secondUserId).FirstOrDefault();
 
-            if (firstUser.Friends.Contains(secondUser))
+            if (GetFriends(firstUser.Id).Contains(secondUser))
             {
                 return RelationshipBetweenUsers.Friends;
             }
@@ -97,11 +101,43 @@ namespace Domain.Concrete
                 if (invitationOne != null) return RelationshipBetweenUsers.SendedInvitationToFriends;
 
                 FriendsInvitation invitationTwo = (from p in applicationDbContext.FriendsInvitations where p.WhoInvId == secondUserId && p.WhoHadBeenInvId == firstUserId select p).FirstOrDefault();
-                if (invitationOne != null) return RelationshipBetweenUsers.ReceivedInvitationToFriends;
+                if (invitationTwo != null) return RelationshipBetweenUsers.ReceivedInvitationToFriends;
 
                 return RelationshipBetweenUsers.NoRelationship;
             }
 
+        }
+
+        public ICollection<ApplicationUser> GetFriends(string userId)
+        {
+            try
+            {
+                IEnumerable<Friendship> friendships = applicationDbContext.Friendships.Where(x => (x.FirstUser == userId || x.SecondUser == userId)).AsEnumerable();
+
+                List<string> userIds = new List<string>();
+
+                foreach (Friendship item in friendships)
+                {
+                    if (item.FirstUser != userId) userIds.Add(item.FirstUser);
+                    else if (item.SecondUser != userId) userIds.Add(item.SecondUser);
+                    else throw new ArgumentException("Zły format obiektu Friendship!");
+                }
+
+                List<ApplicationUser> users = new List<ApplicationUser>();
+
+                foreach (var item in userIds)
+                {
+                    users.Add(GetUser(item));
+                }
+
+                return users;
+
+                //user = applicationDbContext.Users.Where(x => x.Id == userId).Include(x => x.Friends).ThenInclude(x => x.Pictures).ThenInclude(x => x.Picture).Single();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
     }
 }

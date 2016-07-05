@@ -12,8 +12,9 @@ namespace Domain.Abstract
         ApplicationUser GetUser(string userId);
         List<ApplicationUser> GetUsers(string userNamePattern);
         void SendInvitationToFriends(string userSendingId, string userReceivingInvitationId);
-        void AcceptInvitationToFriends(int invitationId);
+        void AcceptInvitationToFriends(string userWhoAcceptInvitationId, string userWhoSendInvitationId);
         IEnumerable<FriendsInvitation> GetInvitationForUser(string userId);
         RelationshipBetweenUsers GetRelationshipBetweenUsers(string firstUserId, string secondUserId);
+        ICollection<ApplicationUser> GetFriends(string userId);
     }
 }

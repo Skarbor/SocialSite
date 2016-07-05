@@ -1,5 +1,7 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="../gulpfile.js" />
+/// <reference path="js/components/communicator/communicator.js" />
+/// <reference path="js/components/communicator/communicatormessageworker.js" />
 /// <reference path="js/site.js" />
 /// <reference path="js/user/userdisplaysinglepicture.js" />
 /// <reference path="js/User/userProfilePictures.js" />

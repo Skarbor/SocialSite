@@ -30,7 +30,7 @@
             }
             else if (relationshipBetweenUsers == RelationshipBetweenUsers.ReceivedInvitationToFriends)
             {
-                <p>Zaakceptuj zaproszenie</p>
+                <button type="button" onclick="AcceptInvitationToFriends('@Model.Id')">Zaakceptuj zaproszenie!</button>
             }
             else if (relationshipBetweenUsers == RelationshipBetweenUsers.Friends)
             {

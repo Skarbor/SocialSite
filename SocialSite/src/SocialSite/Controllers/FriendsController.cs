@@ -20,9 +20,9 @@ namespace SocialSite.Controllers
         }
 
 
-        public void AcceptInvitationToFriends(int invitationId)
+        public void AcceptInvitationToFriends(string userId)
         {
-            userRepository.AcceptInvitationToFriends(invitationId);
+            userRepository.AcceptInvitationToFriends(User.GetUserId(), userId);
         }
     }
 }

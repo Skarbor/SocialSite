@@ -1,0 +1,26 @@
+﻿@model List<Domain.Entities.User.ApplicationUser>
+<link rel="stylesheet" href="~/css/Components/Communicator.css" />
+<link rel="stylesheet" href="~/css/Components/CommunicatorChatWindow.css" />
+<script src="~/js/Components/Communicator/communicator.js"></script>
+
+<div id="comunicatorContacts">
+    <ul>
+        @foreach (var friend in Model)
+        {
+            <li onclick="communicatorContactClick('@friend.Id')">
+                <div>
+                    @if (friend.HasProfilePicture())
+                    {
+                        <img class="img-rounded" src="@friend.ProfilPicture.Picture.PhotoString" />
+                    }
+                    else
+                    {
+                        <img class="img-rounded" src="~/images/anonim_men.jpg" />
+                    }
+                    @friend.FirstName
+                    @friend.LastName
+                </div>
+            </li>
+        }
+    </ul>
+</div>

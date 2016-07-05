@@ -1,0 +1,33 @@
+﻿.chatWindow {
+    width:200px;
+    height:250px;
+    background-color:white;
+    border:1px solid black;
+    float:left;
+}
+
+    .chatWindow input {
+        width:198px;
+        height:30px;
+    }
+
+.chatWindowBelkaGorna {
+    height:20px;
+    background-color:green;
+    text-align:center;
+    vertical-align:middle;
+    color:azure;
+    cursor:pointer;
+}
+
+.chatWindowRozmowa {
+    height:200px;
+    overflow:auto;
+    /*background-color:red;*/
+}
+
+.chatWindow img {
+    width:30px;
+    height:30px;
+    float:left;
+}

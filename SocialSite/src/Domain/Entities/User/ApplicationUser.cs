@@ -16,8 +16,6 @@ namespace Domain.Entities.User
     {
         IUserRepository userRepository = new UserRepository();
 
-        [NotMapped]
-        public virtual ICollection<ApplicationUser> Friends { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime DateOfBirth { get; set; }
@@ -43,7 +41,6 @@ namespace Domain.Entities.User
 
         public ApplicationUser()
         {
-            Friends = new List<ApplicationUser>();
             Pictures = new List<UserPicture>();
         }
 

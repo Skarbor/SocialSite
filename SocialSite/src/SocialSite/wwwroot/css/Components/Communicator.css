@@ -1,0 +1,49 @@
+﻿#comunicatorContacts {
+    background-color:white;
+    text-align:center;
+}
+    #comunicatorContacts img
+    {
+        width:50px;
+        height:50px;
+        text-align:left;
+        margin:0px;
+        padding:0px;
+        float:left;
+    }
+
+    #comunicatorContacts ul {
+        list-style:none;
+        margin:0px;
+        padding:0px;
+    }
+
+#comunicatorContacts ul li div {
+    height:50px;
+    margin:0px;
+    padding:0px;
+    list-style:none;
+    text-align:center;
+    vertical-align:middle;
+    background-color:whitesmoke;
+    color:purple;
+    font-style:oblique;
+    font-weight:bold;
+}
+
+#comunicatorContacts ul li :hover {
+    height:50px;
+    margin:0px;
+    padding:0px;
+    list-style:none;
+    text-align:center;
+    vertical-align:middle;
+    background-color:black;
+    color:white;
+    font-style:oblique;
+    font-weight:bold;
+    cursor:pointer;
+    border:1px solid silver;
+}
+
+

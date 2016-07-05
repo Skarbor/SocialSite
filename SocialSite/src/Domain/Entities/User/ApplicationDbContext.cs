@@ -7,6 +7,7 @@ using Microsoft.Data.Entity;
 using Domain.Entities.Friendship;
 using System.Reflection.Emit;
 using Domain.Entities.EntitiesMap;
+using Domain.Entities.Messages;
 
 namespace Domain.Entities.User
 {
@@ -18,6 +19,7 @@ namespace Domain.Entities.User
         public DbSet<Friendship.Friendship> Friendships { get; set; }
         public DbSet<Post.Post> Posts { get; set; }
         public DbSet<Post.Comment> Comments { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         public ApplicationDbContext() : base()
         {
