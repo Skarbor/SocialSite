@@ -26,8 +26,54 @@
     /*background-color:red;*/
 }
 
-.chatWindow img {
-    width:30px;
-    height:30px;
-    float:left;
+.UserMessage {
+    text-align:right;
+    margin-bottom:20px;
 }
+
+    .UserMessage img {
+        width:30px;
+        height:30px;
+        float:right;
+        text-align:right;
+        margin-left:10px;
+    }
+
+    .UserMessage span {
+        display: inline-block;
+        max-width: 130px;
+        background-color:aqua;
+        padding: 5px;
+        border-radius: 4px;
+        position: relative;
+        border-width: 1px;
+        border-style: solid;
+        border-color: grey;
+        font-weight:bold;
+    }
+
+.NotUserMessage {
+    text-align:left;
+    margin-bottom:20px;
+}
+    .NotUserMessage img {
+        width:30px;
+        height:30px;
+        float:left;
+        text-align:left;
+        margin-right:10px;
+    }
+
+    .NotUserMessage span {
+        display: inline-block;
+        max-width: 130px;
+        background-color: deepskyblue;
+        padding: 5px;
+        border-radius: 4px;
+        position: relative;
+        border-width: 1px;
+        border-style: solid;
+        border-color: grey;
+        font-weight:bold;
+    }
+

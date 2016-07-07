@@ -1,16 +1,35 @@
-﻿var myWorker;
-var lastMessageId = 0;
-var userProfilePictureString;
+﻿var userProfilePictureString;
+var usersInformations = [];
+var loggedUserId;
+
+function setUpCommunicator(userId)
+{
+    getUserProfilePicture(userId);
+    loggedUserId = userId;
+}
+
 
 function communicatorContactClick(userId)
 {
-    getUserProfilePicture(userId);
-    displayChatWindow(userId);
+    getUserProfilePicture(userId, function () {
+        displayChatWindow(userId);
+    });
+    
 }
+
 
 function displayChatWindow(userId)
 {
-    lastMessageId = 0;
+    if (CheckIfArrayContainsUserByUserId(usersInformations, userId)) {
+        usersInformations[GetArrayElementIndexByUserId(usersInformations, userId)].IsChatWindowOpen = true;
+    }
+    else {
+        usersInformations.push(
+            {
+                UserId: userId,
+                IsChatWindowOpen: true
+            });
+    }
 
     var containerDiv = document.getElementById("conversationContainer");
 
@@ -20,10 +39,19 @@ function displayChatWindow(userId)
     var belkaGorna = document.createElement("div");
     belkaGorna.className = "chatWindowBelkaGorna";
     belkaGorna.appendChild(document.createTextNode("Adam Wójcik"));
-    belkaGorna.addEventListener("click", function () { hideChatWindow(window); });
+    belkaGorna.addEventListener("click", function () { hideChatWindow(userId, window); });
 
     var divRozmowy = document.createElement("div");
     divRozmowy.className = "chatWindowRozmowa";
+
+    $(divRozmowy).scroll(function () {
+        var pos = $(divRozmowy).scrollTop();
+        if (pos == 0) {
+            alert('top of the div');
+        }
+    });
+
+    usersInformations[GetArrayElementIndexByUserId(usersInformations, userId)].DivRozmowy = divRozmowy;
 
     var textInput = document.createElement("input");
     textInput.type = "text";
@@ -35,30 +63,10 @@ function displayChatWindow(userId)
     window.appendChild(textInput);
     containerDiv.appendChild(window);
 
-    //loadMessages(userId, divRozmowy);
-
-    messagesWorker(userId, divRozmowy);
+    loadMessages(userId, divRozmowy);
 }
 
-function messagesWorker(userId, divRozmowy)
-{
-    setTimeout(function ()
-    {
-        loadMessages(userId, divRozmowy)
-        messagesWorker(userId, divRozmowy);
-    }, 500);
-
-
-    //myWorker = new Worker("js/Components/Communicator/communicatorMessageWorker.js");
-    //myWorker.onmessage = function (event)
-    //{
-    //    displayMessage(event.data, divRozmowy)
-    //}
-
-    //myWorker.postMessage(userId);
-}
-
-function loadMessages(userId, divRozmowy)
+function loadMessages(userId)
 {
     $.ajax(
     {
@@ -70,31 +78,49 @@ function loadMessages(userId, divRozmowy)
         success: function (data)
         {
             for (var i = 0; i < data.length; i++) {
-                if (data[i].Id > lastMessageId) {
-                    lastMessageId = data[i].Id;
-                    displayMessage(data[i].Content, divRozmowy);
-                }
-
+                displayMessage(data[i].Content, data[i].UserWhoReceivedId, data[i].UserWhoSendId, data[i].Id);
             }
         }
     });
 }
 
-function displayMessage(message, divRozmowy)
+function displayMessage(message, receiverUserId, senderUserId, messageId)
 {
+    var messageDiv = document.createElement("div");
+    messageDiv.setAttribute("messageId", messageId);
+
+
     var profilePicture = document.createElement("img");
-    profilePicture.src = userProfilePictureString;
+    if (usersInformations[GetArrayElementIndexByUserId(usersInformations, receiverUserId)].UserProfilePictureString != "") {
+        profilePicture.src = usersInformations[GetArrayElementIndexByUserId(usersInformations, receiverUserId)].UserProfilePictureString;
+    }
+    else
+        profilePicture.src = "images/anonim_men.jpg";
+
+    var messageText = document.createElement("span");
+    messageText.appendChild(document.createTextNode(message));
+
+    messageDiv.appendChild(profilePicture);
+    messageDiv.appendChild(messageText);
+
+    if (loggedUserId == senderUserId) {
+        messageDiv.className += "UserMessage";
+
+        usersInformations[GetArrayElementIndexByUserId(usersInformations, receiverUserId)].DivRozmowy.appendChild(messageDiv);
+        usersInformations[GetArrayElementIndexByUserId(usersInformations, receiverUserId)].DivRozmowy.scrollTop = usersInformations[GetArrayElementIndexByUserId(usersInformations, receiverUserId)].DivRozmowy.scrollHeight;
+    }
+    else {
+        messageDiv.className += "NotUserMessage";
+
+        usersInformations[GetArrayElementIndexByUserId(usersInformations, senderUserId)].DivRozmowy.appendChild(messageDiv);
+        usersInformations[GetArrayElementIndexByUserId(usersInformations, senderUserId)].DivRozmowy.scrollTop = usersInformations[GetArrayElementIndexByUserId(usersInformations, senderUserId)].DivRozmowy.scrollHeight;
+    }
 
 
-    var paragraph = document.createElement("p");
-    paragraph.appendChild(document.createTextNode(message));
-
-    divRozmowy.appendChild(profilePicture);
-    divRozmowy.appendChild(paragraph);
-    divRozmowy.scrollTop = divRozmowy.scrollHeight;
+    
 }
 
-function getUserProfilePicture(userId)
+function getUserProfilePicture(userId, callback)
 {
     $.ajax(
    {
@@ -105,7 +131,20 @@ function getUserProfilePicture(userId)
        async: true,
        success: function (data)
        {
-           userProfilePictureString = data;
+           if (CheckIfArrayContainsUserByUserId(usersInformations, userId)) {
+               usersInformations[GetArrayElementIndexByUserId(usersInformations, userId)].UserProfilePictureString = data;
+           }
+           else {
+               usersInformations.push(
+                   {
+                       UserId: userId,
+                       UserProfilePictureString: data
+                   });
+           }
+           if (callback != undefined) {
+               callback();
+           }
+
        },
        error: function (data)
        {
@@ -114,22 +153,17 @@ function getUserProfilePicture(userId)
    });
 }
 
-function sendMessage(divRozmowy, userId, textInput)
+function sendMessage(divRozmowy, receiverUserId, textInput)
 {
     var message = textInput.value;
-    $.ajax(
-    {
-        url: "/Communicator/SendMessage",
-        method: "GET",
-        data: { "receivingUserId": userId, "message": message },
-        dataType: "json",
-        async: true
-    });
 
-    //displayMessage(message, divRozmowy);
+    SocketSendMessage(receiverUserId, message);
+
+    displayMessage(message,receiverUserId,  loggedUserId);
     textInput.value = "";
 }
 
-function hideChatWindow(window) {
+function hideChatWindow(userId, window) {
+    usersInformations[GetArrayElementIndexByUserId(usersInformations, userId)].IsChatWindowOpen = false;
     window.remove();
 }

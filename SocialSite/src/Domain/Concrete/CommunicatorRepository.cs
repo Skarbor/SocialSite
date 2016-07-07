@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Domain.Entities.Messages;
 using Domain.Entities.User;
+using Domain.Communicator;
 
 namespace Domain.Concrete
 {
@@ -44,7 +45,7 @@ namespace Domain.Concrete
                                                  .OrderBy(x => x.DateTime);
         }
 
-        public void SendMessage(string sendingUserId, string receivingUserId, string message)
+        public int SendMessage(string sendingUserId, string receivingUserId, string message)
         {
             Message msg = new Message();
             msg.UserWhoSendId = sendingUserId;
@@ -55,6 +56,8 @@ namespace Domain.Concrete
 
             dbContext.Messages.Add(msg);
             dbContext.SaveChanges();
+
+            return msg.Id;
         }
     }
 }

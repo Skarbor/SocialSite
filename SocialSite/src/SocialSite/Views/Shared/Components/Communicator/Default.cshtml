@@ -2,6 +2,15 @@
 <link rel="stylesheet" href="~/css/Components/Communicator.css" />
 <link rel="stylesheet" href="~/css/Components/CommunicatorChatWindow.css" />
 <script src="~/js/Components/Communicator/communicator.js"></script>
+<script src="~/js/Components/Communicator/CommunicatorWebSocket.js"></script>
+<script src="~/js/Components/Communicator/ArrayHelpers.js"></script>
+@using System.Security.Claims;
+
+
+<script>
+    setUpCommunicator('@User.GetUserId()');
+    StartWebSocket();
+</script>
 
 <div id="comunicatorContacts">
     <ul>

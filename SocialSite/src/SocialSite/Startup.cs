@@ -11,6 +11,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SocialSite.Services;
 using Domain.Entities.User;
+using System.Net.WebSockets;
+using System.Threading;
+using System.Text;
+using SocialSite.Helpers;
+using Domain.Communicator;
+using System.Security.Claims;
 
 namespace SocialSite
 {
@@ -89,6 +95,25 @@ namespace SocialSite
             app.UseStaticFiles();
 
             app.UseIdentity();
+
+
+            app.UseWebSockets();
+            app.Use(async (http, next) =>
+            {
+                if (http.WebSockets.IsWebSocketRequest)
+                {
+                    var webSocket = await http.WebSockets.AcceptWebSocketAsync();
+                    if (webSocket != null && webSocket.State == WebSocketState.Open)
+                    {
+                        CommunicatorWebSocketsManager.AddWebSocket(http.User.GetUserId(), webSocket);
+                    }
+                }
+                else
+                {
+                    // Nothing to do here, pass downstream.  
+                    await next();
+                }
+            });
 
             // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
 
